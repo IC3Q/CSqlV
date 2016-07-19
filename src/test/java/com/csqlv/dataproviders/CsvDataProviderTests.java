@@ -21,9 +21,9 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = TestConfig.class)
-public class CsvDataProviderImplTests {
+public class CsvDataProviderTests {
 
-    private CsvDataProviderImpl csvDataProvider;
+    private CsvDataProvider csvDataProvider;
 
     @Autowired
     @Qualifier("ProperPath")
@@ -35,19 +35,19 @@ public class CsvDataProviderImplTests {
 
     @Test
     public void properParseTest() throws IOException {
-        csvDataProvider = new CsvDataProviderImpl(properFilePath);
-        Stream<CSVRecord> dataStream = csvDataProvider.parseData();
+        csvDataProvider = new CsvDataProvider();
+        Stream<Map<String, String>> dataStream = csvDataProvider.parseData(properFilePath);
         assertNotNull(dataStream);
-        List<CSVRecord> data = dataStream.collect(Collectors.toList());
+        List<Map<String, String>> data = dataStream.collect(Collectors.toList());
         assertEquals(2, data.size());
-        Map<String, String> mappedRecord = data.get(0).toMap();
+        Map<String, String> mappedRecord = data.get(0);
         assertEquals("1", mappedRecord.get("a"));
         assertEquals("2", mappedRecord.get("b"));
     }
 
     @Test(expected = IOException.class)
     public void parseNonExistingFile() throws IOException {
-        csvDataProvider = new CsvDataProviderImpl(nonExistingFilePath);
-        csvDataProvider.parseData();
+        csvDataProvider = new CsvDataProvider();
+        csvDataProvider.parseData(nonExistingFilePath);
     }
 }
