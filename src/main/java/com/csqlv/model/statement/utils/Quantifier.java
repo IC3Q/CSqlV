@@ -7,7 +7,14 @@ public class Quantifier {
     public Quantifier(Operator operator, Object value) {
         this.operator = operator;
         this.value = value;
+    }
 
+    public Operator getOperator() {
+        return operator;
+    }
+
+    public Object getValue() {
+        return value;
     }
 
     @Override
@@ -19,7 +26,6 @@ public class Quantifier {
 
         if (operator != that.operator) return false;
         return value.equals(that.value);
-
     }
 
     @Override
