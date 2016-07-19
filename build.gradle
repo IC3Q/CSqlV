@@ -25,9 +25,14 @@ repositories {
 	mavenCentral()
 }
 
+bootRun {
+	main = "com.csqlv.ApplicationRunner"
+	standardInput = System.in
+}
 
 dependencies {
 	compile('org.apache.commons:commons-csv:1.4')
 	compile('org.springframework.boot:spring-boot-starter')
+	compile files('lib/gsp.jar')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
