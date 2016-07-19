@@ -7,6 +7,7 @@ import com.csqlv.model.statement.Statement;
 import com.csqlv.parsers.exceptions.NotSupportedWhereException;
 import com.csqlv.parsers.exceptions.ParseQueryException;
 import gudusoft.gsqlparser.*;
+import gudusoft.gsqlparser.nodes.TConstant;
 import gudusoft.gsqlparser.nodes.TJoin;
 import gudusoft.gsqlparser.nodes.TResultColumn;
 import gudusoft.gsqlparser.stmt.TSelectSqlStatement;
@@ -59,22 +60,22 @@ public class SQLQueryParser implements QueryParser {
 
     private void parseSelectStatement(QueryEntity queryEntity, TCustomSqlStatement stmt) throws ParseQueryException {
         TSelectSqlStatement statement = (TSelectSqlStatement)stmt;
-        // Selects
         parseColumnsClause(queryEntity, statement);
-        // From
         parseFromClause(queryEntity, statement);
-        // Where
         parseWhereClause(queryEntity, statement);
-        // order by
         parseOrderByClause(queryEntity, statement);
-        // limit clause
         parseLimitClause(queryEntity, statement);
     }
 
-    private void parseLimitClause(QueryEntity queryEntity, TSelectSqlStatement statement) {
+    private void parseLimitClause(QueryEntity queryEntity, TSelectSqlStatement statement) throws ParseQueryException {
         if (statement.getLimitClause() != null){
-            int limit = Integer.parseInt(statement.getLimitClause().getRow_count().getConstantOperand().getStringValue());
-            queryEntity.setLimit(limit);
+            TConstant limitConstant = statement.getLimitClause().getRow_count().getConstantOperand();
+            if (limitConstant != null) {
+                int limit = Integer.parseInt(limitConstant.getStringValue());
+                queryEntity.setLimit(limit);
+            } else {
+                throw new ParseQueryException("Limit is not a number.");
+            }
         }
     }
 

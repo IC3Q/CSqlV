@@ -23,7 +23,6 @@ public class CsvDataProviderImpl implements CsvDataProvider {
     public Stream<CSVRecord> parseData() throws IOException {
         File csvData = filePath.toFile();
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180.withHeader());
-        System.out.println(parser.getHeaderMap());
         Iterable<CSVRecord> iterable = () -> parser.iterator();
         Stream<CSVRecord> stream = StreamSupport.stream(iterable.spliterator(), false);
 

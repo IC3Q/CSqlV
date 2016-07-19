@@ -1,5 +1,10 @@
 package com.csqlv;
 
+import com.csqlv.model.QueryEntity;
+import com.csqlv.parsers.QueryParser;
+import com.csqlv.parsers.SQLQueryParser;
+import gudusoft.gsqlparser.EDbVendor;
+import gudusoft.gsqlparser.TGSqlParser;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,6 +29,11 @@ public class TestConfig {
     @Bean(name = "NonExistingPath")
     public Path getNonExistingPath() {
         return Paths.get("/0138ac89-f229-48fd-8185-9c986c662505");
+    }
+
+    @Bean
+    public QueryParser getSqlQueryParser() {
+        return new SQLQueryParser(new TGSqlParser(EDbVendor.dbvmysql));
     }
 
     private Path getResourcePath(String name) throws URISyntaxException {

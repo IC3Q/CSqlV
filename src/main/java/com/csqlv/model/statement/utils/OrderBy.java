@@ -13,4 +13,23 @@ public class OrderBy {
     public Order getOrder() {
         return order;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrderBy)) return false;
+
+        OrderBy orderBy = (OrderBy) o;
+
+        if (!column.equals(orderBy.column)) return false;
+        return order == orderBy.order;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = column.hashCode();
+        result = 31 * result + order.hashCode();
+        return result;
+    }
 }

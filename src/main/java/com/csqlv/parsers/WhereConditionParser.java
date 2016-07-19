@@ -16,50 +16,44 @@ public class WhereConditionParser implements IExpressionVisitor {
 
     private TExpression condition;
     private Deque<Statement> stack;
-    private boolean errorOcurred;
+    private boolean errorOccurred;
 
     public WhereConditionParser(TExpression condition) {
         this.condition = condition;
         stack = new ArrayDeque<>();
-        errorOcurred = false;
+        errorOccurred = false;
     }
 
     public Statement getStatement() throws NotSupportedWhereException {
         condition.postOrderTraverse(this);
-        if (stack.peek() != null)
+        if (stack.peek() == null || errorOccurred)
+            throw new NotSupportedWhereException("Where statement couldn't be parsed. Syntax not supported.");
+        else
             return stack.pop();
-        else throw new NotSupportedWhereException("Where statement couldn't be parsed.");
     }
 
-    boolean isSimpleComparison(EExpressionType t) {
+    private boolean isSimpleComparison(EExpressionType t) {
         return ((t == EExpressionType.simple_comparison_t)
-                || (t == EExpressionType.group_comparison_t)
-                || (t == EExpressionType.in_t));
+                || (t == EExpressionType.group_comparison_t));
     }
 
-    boolean isLogicalOperator(EExpressionType t) {
+    private boolean isLogicalOperator(EExpressionType t) {
         return ((t == EExpressionType.logical_and_t)
                 || (t == EExpressionType.logical_or_t));
+    }
+
+    private boolean isOmittedOperator(EExpressionType t) {
+        return (t == EExpressionType.parenthesis_t
+                || t == EExpressionType.simple_object_name_t
+                || t == EExpressionType.simple_constant_t);
     }
 
     public boolean exprVisit(TParseTreeNode pnode, boolean pIsLeafNode) {
         TExpression lcexpr = (TExpression) pnode;
         if (isSimpleComparison(lcexpr.getExpressionType())) {
-            TExpression leftExpr = (TExpression) lcexpr.getLeftOperand();
-
-            System.out.println("column: " + leftExpr.toString());
-            if (lcexpr.getComparisonOperator() != null) {
-                System.out.println("Operator: "
-                        + lcexpr.getComparisonOperator().astext);
-            }
-            System.out.println("value: "
-                    + lcexpr.getRightOperand().toString());
-            System.out.println("");
-
+            TExpression leftExpr = lcexpr.getLeftOperand();
             Operator myOperator = getOperator(lcexpr);
-
-            Statement statement = StatementCreator.createSimpleStatement(leftExpr.toString(), myOperator, lcexpr.getRightOperand());
-
+            Statement statement = StatementCreator.createSimpleStatement(leftExpr.toString(), myOperator, lcexpr.getRightOperand().toString());
             stack.push(statement);
         } else if (isLogicalOperator(lcexpr.getExpressionType())) {
             if (stack.size() >= 2) {
@@ -67,7 +61,7 @@ public class WhereConditionParser implements IExpressionVisitor {
                 Statement statement2 = stack.pop();
                 Statement resultStatement = null;
                 String operator = lcexpr.getOperatorToken().astext;
-                switch (operator) {
+                switch (operator.toUpperCase()) {
                     case "OR":
                         resultStatement = statement1.or(statement2);
                         break;
@@ -75,14 +69,14 @@ public class WhereConditionParser implements IExpressionVisitor {
                         resultStatement = statement1.and(statement2);
                         break;
                     default:
-                        errorOcurred = true;
+                        errorOccurred = true;
                 }
                 stack.push(resultStatement);
             } else {
-                errorOcurred = true;
+                errorOccurred = true;
             }
-        } else if (lcexpr.getExpressionType() != EExpressionType.parenthesis_t) {
-            errorOcurred = true;
+        } else if (!isOmittedOperator(lcexpr.getExpressionType())) {
+            errorOccurred = true;
         }
         return true;
     }
@@ -110,7 +104,7 @@ public class WhereConditionParser implements IExpressionVisitor {
                 myOperator = Operator.LESS;
                 break;
             default:
-                errorOcurred = true;
+                errorOccurred = true;
         }
         return myOperator;
     }
