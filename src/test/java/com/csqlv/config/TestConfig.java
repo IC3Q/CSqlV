@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -34,7 +33,7 @@ public class TestConfig {
 
     private Path getResourcePath(String name) throws URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL url = classLoader.getResource(FileSystems.getDefault().getSeparator() + name);
+        URL url = classLoader.getResource(name);
         Path resPath = Paths.get(url.toURI());
         return resPath;
     }
