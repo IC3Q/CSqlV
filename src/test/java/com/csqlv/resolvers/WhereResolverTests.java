@@ -1,10 +1,10 @@
 package com.csqlv.resolvers;
 
 import com.csqlv.TestConfig;
-import com.csqlv.model.QueryEntity;
 import com.csqlv.model.statement.Statement;
 import com.csqlv.model.statement.utils.Operator;
 import com.csqlv.model.statement.utils.StatementCreator;
+import com.csqlv.utils.ObjectCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class WhereResolverTests {
 
     @Before
     public void init() {
-        inputStream = createTestStream();
+        inputStream = ObjectCreator.createTestStream();
     }
 
     @Test
@@ -113,32 +113,6 @@ public class WhereResolverTests {
                 new HashSet<>(expectedIds),
                 new HashSet<>(result.stream().map((x) -> x.get("id")).collect(Collectors.toList()))
         );
-    }
-
-    private Stream<Map<String, String>> createTestStream() {
-        ArrayList<Map<String, String>> list = new ArrayList<>();
-        list.add(new HashMap<String, String>() {{
-            put("id", "1");
-            put("a", "1");
-            put("b", "1");
-            put("c", "1");
-            put("d", "aaa");
-        }});
-        list.add(new HashMap<String, String>() {{
-            put("id", "2");
-            put("a", "2");
-            put("b", "2");
-            put("c", "2");
-            put("d", "bbb");
-        }});
-        list.add(new HashMap<String, String>() {{
-            put("id", "3");
-            put("a", "3");
-            put("b", "3");
-            put("c", "3");
-            put("d", "abc");
-        }});
-        return list.stream();
     }
 
 }
