@@ -3,7 +3,7 @@ package com.csqlv.utils;
 public class UserMessages {
     public static void printHelp() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Usage: \tjava -jar CSqlV-0.0.1-SNAPSHOT.jar --query=\"yourQuery\"\n");
+        sb.append("Usage: \tjava -jar CSqlV.jar --query=\"yourQuery\"\n");
         sb.append("notes:\n" +
                 "\t* Query should be in quotes,\n" +
                 "\t* filepath should be in escaped quotes\n" +
@@ -15,6 +15,6 @@ public class UserMessages {
     }
 
     public static void printNothingProvided() {
-        System.out.println("type java -jar CSqlV-0.0.1-SNAPSHOT.jar --help to get usage.");
+        System.out.println("type java -jar CSqlV.jar --help to get usage.");
     }
 }
