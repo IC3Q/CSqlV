@@ -10,7 +10,7 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     @Override
     public void printData(List<Map<String, String>> data) {
-        if (data.size() == 0) {
+        if (data.isEmpty()) {
             System.out.println("No data found.");
             return;
         }

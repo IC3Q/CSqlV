@@ -14,7 +14,7 @@ public class ColumnResolver implements Function<Map<String, String>, Map<String,
 
     @Override
     public Map<String, String> apply(Map<String, String> record) {
-        if (selectColumns != null && selectColumns.size() > 0) {
+        if (selectColumns != null && !selectColumns.isEmpty()) {
             if (selectColumns.size() == 1 && selectColumns.get(0).equals("*")) return record;
             record.keySet().removeIf(column -> !selectColumns.contains(column));
         }
