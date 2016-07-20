@@ -1,7 +1,5 @@
 package com.csqlv.dataproviders;
 
-import org.apache.commons.csv.CSVRecord;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;

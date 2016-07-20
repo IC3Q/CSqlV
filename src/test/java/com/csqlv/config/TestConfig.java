@@ -1,13 +1,10 @@
-package com.csqlv;
+package com.csqlv.config;
 
-import com.csqlv.model.QueryEntity;
-import com.csqlv.parsers.QueryParser;
 import com.csqlv.parsers.SQLQueryParser;
 import gudusoft.gsqlparser.EDbVendor;
 import gudusoft.gsqlparser.TGSqlParser;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.URISyntaxException;
@@ -17,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Configuration
-@ComponentScan
 @EnableAutoConfiguration
 public class TestConfig {
 
@@ -32,7 +28,7 @@ public class TestConfig {
     }
 
     @Bean
-    public QueryParser getSqlQueryParser() {
+    public SQLQueryParser getSQLQueryParser() {
         return new SQLQueryParser(new TGSqlParser(EDbVendor.dbvmysql));
     }
 

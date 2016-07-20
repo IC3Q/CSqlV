@@ -1,8 +1,8 @@
 package com.csqlv.parsers;
 
-import com.csqlv.model.statement.utils.StatementCreator;
-import com.csqlv.model.statement.utils.Operator;
 import com.csqlv.model.statement.Statement;
+import com.csqlv.model.statement.utils.Operator;
+import com.csqlv.model.statement.utils.StatementCreator;
 import com.csqlv.parsers.exceptions.NotSupportedWhereException;
 import gudusoft.gsqlparser.EExpressionType;
 import gudusoft.gsqlparser.nodes.IExpressionVisitor;

@@ -1,10 +1,10 @@
 package com.csqlv.resolvers;
 
-import com.csqlv.model.QueryEntity;
 import com.csqlv.model.statement.ComplexStatement;
 import com.csqlv.model.statement.SimpleStatement;
 import com.csqlv.model.statement.Statement;
 import com.csqlv.model.statement.utils.Quantifier;
+import com.csqlv.resolvers.exceptions.IllegalCharacterWhileQueryingException;
 
 import java.util.Map;
 import java.util.function.Predicate;
@@ -20,8 +20,12 @@ public class WhereResolver implements Predicate<Map<String, String>> {
     @Override
     public boolean test(Map<String, String> record) {
         if (statement == null) return true;
-        Predicate<Map<String, String>> predicate = getPredicateForStatement(statement);
-        return predicate.test(record);
+        try {
+            Predicate<Map<String, String>> predicate = getPredicateForStatement(statement);
+            return predicate.test(record);
+        } catch (NumberFormatException e) {
+            throw new IllegalCharacterWhileQueryingException();
+        }
     }
 
     private Predicate<Map<String, String>> getPredicateForStatement(Statement statement) {
@@ -37,7 +41,7 @@ public class WhereResolver implements Predicate<Map<String, String>> {
     private Predicate<Map<String, String>> getPredicateForSimpleStatement(SimpleStatement statement) {
         Quantifier quantifier = statement.getQuantifier();
         String column = statement.getColumnName();
-        switch(quantifier.getOperator()) {
+        switch (quantifier.getOperator()) {
             case EQUALS:
                 return (element) ->
                         element.get(column).equals(quantifier.getValue().toString());
@@ -55,7 +59,7 @@ public class WhereResolver implements Predicate<Map<String, String>> {
                         Double.parseDouble(element.get(column)) <= Double.parseDouble(quantifier.getValue().toString());
             case LIKE:
                 return (element) ->
-                    resolveLike(element, quantifier, column);
+                        resolveLike(element, quantifier, column);
             default:
                 throw new IllegalArgumentException("Not supported operator.");
         }
@@ -83,7 +87,7 @@ public class WhereResolver implements Predicate<Map<String, String>> {
         if (left == null || right == null) {
             throw new IllegalArgumentException("Complex where statement is incorrectly built.");
         } else {
-            switch(statement.getLogicalCondition()) {
+            switch (statement.getLogicalCondition()) {
                 case AND:
                     return getPredicateForStatement(left).and(getPredicateForStatement(right));
                 case OR:

@@ -1,14 +1,12 @@
 package com.csqlv.resolvers;
 
-import com.csqlv.TestConfig;
 import com.csqlv.model.statement.utils.Order;
 import com.csqlv.model.statement.utils.OrderBy;
 import com.csqlv.utils.ObjectCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.runners.JUnit4;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +17,9 @@ import java.util.stream.Stream;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = TestConfig.class)
+@RunWith(JUnit4.class)
 public class OrderByResolverTests {
+
     private OrderBy orderBy;
     private Stream<Map<String, String>> inputStream;
 

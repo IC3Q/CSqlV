@@ -1,17 +1,16 @@
 package com.csqlv.parsers.sqlqueryparser;
 
-import com.csqlv.TestConfig;
+import com.csqlv.config.TestConfig;
 import com.csqlv.model.QueryEntity;
 import com.csqlv.model.statement.utils.Order;
 import com.csqlv.model.statement.utils.OrderBy;
-import com.csqlv.parsers.QueryParser;
 import com.csqlv.parsers.SQLQueryParser;
 import com.csqlv.parsers.exceptions.ParseQueryException;
-import gudusoft.gsqlparser.EDbVendor;
-import gudusoft.gsqlparser.TGSqlParser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -21,9 +20,11 @@ import static org.junit.Assert.assertNull;
 @SpringApplicationConfiguration(classes = TestConfig.class)
 public class SqlQueryParserOrderByTests {
 
-    public QueryParser sqlQueryParser = new SQLQueryParser(new TGSqlParser(EDbVendor.dbvmysql));
+    @Autowired
+    public SQLQueryParser sqlQueryParser;
 
     @Test
+    @DirtiesContext
     public void testParseCorrectOrderBy() throws ParseQueryException {
         String query = "SELECT * FROM \"./somefile.csv\" ORDER BY a DESC";
         OrderBy orderBy = new OrderBy("a", Order.DESC);
@@ -32,6 +33,7 @@ public class SqlQueryParserOrderByTests {
     }
 
     @Test
+    @DirtiesContext
     public void testParseOrderByWithoutOrder() throws ParseQueryException {
         String query = "SELECT * FROM \"./somefile.csv\" ORDER BY a";
         OrderBy orderBy = new OrderBy("a", Order.ASC);
@@ -40,12 +42,14 @@ public class SqlQueryParserOrderByTests {
     }
 
     @Test(expected = ParseQueryException.class)
+    @DirtiesContext
     public void testParseEmptyOrderBy() throws ParseQueryException {
         String query = "SELECT * FROM \"./somefile.csv\" ORDER BY";
         sqlQueryParser.parseQuery(query);
     }
 
     @Test
+    @DirtiesContext
     public void testParseNoOrderBy() throws ParseQueryException {
         String query = "SELECT * FROM \"./somefile.csv\"";
         QueryEntity queryEntity = sqlQueryParser.parseQuery(query);

@@ -1,7 +1,7 @@
 package com.csqlv.dataproviders;
 
-import com.csqlv.TestConfig;
-import org.apache.commons.csv.CSVRecord;
+import com.csqlv.config.TestConfig;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,11 @@ public class CsvDataProviderTests {
     @Autowired
     @Qualifier("NonExistingPath")
     private Path nonExistingFilePath;
+
+    @Before
+    public void init() {
+        csvDataProvider = new CsvDataProvider();
+    }
 
     @Test
     public void properParseTest() throws IOException {

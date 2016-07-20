@@ -1,7 +1,7 @@
 package com.csqlv.model;
 
-import com.csqlv.model.statement.utils.OrderBy;
 import com.csqlv.model.statement.Statement;
+import com.csqlv.model.statement.utils.OrderBy;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

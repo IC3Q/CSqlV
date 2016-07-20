@@ -1,15 +1,14 @@
 package com.csqlv.parsers.sqlqueryparser;
 
-import com.csqlv.TestConfig;
+import com.csqlv.config.TestConfig;
 import com.csqlv.model.QueryEntity;
-import com.csqlv.parsers.QueryParser;
 import com.csqlv.parsers.SQLQueryParser;
 import com.csqlv.parsers.exceptions.ParseQueryException;
-import gudusoft.gsqlparser.EDbVendor;
-import gudusoft.gsqlparser.TGSqlParser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.nio.file.Paths;
@@ -20,9 +19,11 @@ import static org.junit.Assert.assertEquals;
 @SpringApplicationConfiguration(classes = TestConfig.class)
 public class SqlQueryParserFromTests {
 
-    public QueryParser sqlQueryParser = new SQLQueryParser(new TGSqlParser(EDbVendor.dbvmysql));
+    @Autowired
+    public SQLQueryParser sqlQueryParser;
 
     @Test
+    @DirtiesContext
     public void testParseCorrectPath() throws ParseQueryException {
         String query = "SELECT a, b FROM \"./somedir/somefile.csv\"";
         String path = "./somedir/somefile.csv";
@@ -31,6 +32,7 @@ public class SqlQueryParserFromTests {
     }
 
     @Test(expected = ParseQueryException.class)
+    @DirtiesContext
     public void testParseEmptyPath() throws ParseQueryException {
         String query = "SELECT a, b FROM";
         sqlQueryParser.parseQuery(query);

@@ -1,6 +1,5 @@
 package com.csqlv.resolvers;
 
-import com.csqlv.TestConfig;
 import com.csqlv.model.statement.Statement;
 import com.csqlv.model.statement.utils.Operator;
 import com.csqlv.model.statement.utils.StatementCreator;
@@ -8,17 +7,18 @@ import com.csqlv.utils.ObjectCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.runners.JUnit4;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = TestConfig.class)
+@RunWith(JUnit4.class)
 public class WhereResolverTests {
 
     private Statement statement;
@@ -33,7 +33,7 @@ public class WhereResolverTests {
     public void testSimpleStatement() {
         statement = StatementCreator.createSimpleStatement("a", Operator.LESS, "2");
         List<Map<String, String>> outputList = inputStream.filter(new WhereResolver(statement)).collect(Collectors.toList());
-        assertEquals(1,outputList.size());
+        assertEquals(1, outputList.size());
         assertEqualSetsOfIds(Arrays.asList("1"), outputList);
         assertEquals(5, outputList.get(0).entrySet().size());
     }
@@ -42,7 +42,7 @@ public class WhereResolverTests {
     public void testMixedStatement() {
         statement = StatementCreator.createSimpleStatement("a", Operator.LESS, "2").or(StatementCreator.createSimpleStatement("a", Operator.GREATER, "2"));
         List<Map<String, String>> outputList = inputStream.filter(new WhereResolver(statement)).collect(Collectors.toList());
-        assertEquals(2,outputList.size());
+        assertEquals(2, outputList.size());
         assertEqualSetsOfIds(Arrays.asList("1", "3"), outputList);
         assertEquals(5, outputList.get(0).entrySet().size());
     }
@@ -52,7 +52,7 @@ public class WhereResolverTests {
         statement = StatementCreator.createSimpleStatement("a", Operator.LESS, "2").or(StatementCreator.createSimpleStatement("a", Operator.GREATER, "2"))
                 .and(StatementCreator.createSimpleStatement("b", Operator.EQUALS, "1"));
         List<Map<String, String>> outputList = inputStream.filter(new WhereResolver(statement)).collect(Collectors.toList());
-        assertEquals(1,outputList.size());
+        assertEquals(1, outputList.size());
         assertEqualSetsOfIds(Arrays.asList("1"), outputList);
         assertEquals(5, outputList.get(0).entrySet().size());
     }

@@ -16,4 +16,5 @@ public class DefaultConfig {
     public TGSqlParser getTGSqlParser() {
         return new TGSqlParser(EDbVendor.dbvmysql);
     }
+
 }

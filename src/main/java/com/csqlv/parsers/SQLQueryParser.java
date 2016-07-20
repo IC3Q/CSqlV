@@ -1,12 +1,15 @@
 package com.csqlv.parsers;
 
 import com.csqlv.model.QueryEntity;
+import com.csqlv.model.statement.Statement;
 import com.csqlv.model.statement.utils.Order;
 import com.csqlv.model.statement.utils.OrderBy;
-import com.csqlv.model.statement.Statement;
 import com.csqlv.parsers.exceptions.NotSupportedWhereException;
 import com.csqlv.parsers.exceptions.ParseQueryException;
-import gudusoft.gsqlparser.*;
+import gudusoft.gsqlparser.ESqlStatementType;
+import gudusoft.gsqlparser.TBaseType;
+import gudusoft.gsqlparser.TCustomSqlStatement;
+import gudusoft.gsqlparser.TGSqlParser;
 import gudusoft.gsqlparser.nodes.TConstant;
 import gudusoft.gsqlparser.nodes.TJoin;
 import gudusoft.gsqlparser.nodes.TResultColumn;
@@ -59,7 +62,7 @@ public class SQLQueryParser implements QueryParser {
     }
 
     private void parseSelectStatement(QueryEntity queryEntity, TCustomSqlStatement stmt) throws ParseQueryException {
-        TSelectSqlStatement statement = (TSelectSqlStatement)stmt;
+        TSelectSqlStatement statement = (TSelectSqlStatement) stmt;
         parseColumnsClause(queryEntity, statement);
         parseFromClause(queryEntity, statement);
         parseWhereClause(queryEntity, statement);
@@ -68,7 +71,7 @@ public class SQLQueryParser implements QueryParser {
     }
 
     private void parseLimitClause(QueryEntity queryEntity, TSelectSqlStatement statement) throws ParseQueryException {
-        if (statement.getLimitClause() != null){
+        if (statement.getLimitClause() != null) {
             TConstant limitConstant = statement.getLimitClause().getRow_count().getConstantOperand();
             if (limitConstant != null) {
                 int limit = Integer.parseInt(limitConstant.getStringValue());
@@ -83,7 +86,7 @@ public class SQLQueryParser implements QueryParser {
         if (statement.getOrderbyClause() != null) {
             String orderByColumn = statement.getOrderbyClause().getItems().getOrderByItem(0).getSortKey().toString();
             Order order;
-            switch(statement.getOrderbyClause().getItems().getOrderByItem(0).getSortOrder()) {
+            switch (statement.getOrderbyClause().getItems().getOrderByItem(0).getSortOrder()) {
                 case desc:
                     order = Order.DESC;
                     break;
@@ -120,8 +123,7 @@ public class SQLQueryParser implements QueryParser {
             Matcher m = r.matcher(resultColumn.getExpr().toString());
             if (m.find()) {
                 queryEntity.setCount(true);
-            }
-            else {
+            } else {
                 queryEntity.addColumn(resultColumn.getExpr().toString());
             }
         }

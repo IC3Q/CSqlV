@@ -1,33 +1,38 @@
 package com.csqlv;
 
-import com.csqlv.model.QueryEntity;
-import com.csqlv.parsers.QueryParser;
-import com.csqlv.parsers.exceptions.ParseQueryException;
+import com.csqlv.utils.UserMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.CommandLinePropertySource;
+import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 @Import(DefaultConfig.class)
 public class ApplicationRunner implements CommandLineRunner {
 
-    private QueryParser queryParser;
+    private CSqlV cSqlV;
 
     @Autowired
-    public ApplicationRunner(QueryParser queryParser) {
-        this.queryParser = queryParser;
+    public ApplicationRunner(CSqlV cSqlV) {
+        this.cSqlV = cSqlV;
     }
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApplicationRunner.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ApplicationRunner.class, args);
+    }
 
     @Override
     public void run(String... args) {
-        try {
-            QueryEntity queryEntity = queryParser.parseQuery("SELECT COUNT(a), b FROM \"./somefile\" WHERE a<3 AND (b>2 OR a>1) ORDER BY a DESC LIMIT 10");
-        } catch (ParseQueryException e) {
-            System.out.println("There have been a problem with parsing query. Details: " + e.getMessage());
+        CommandLinePropertySource properties = new SimpleCommandLinePropertySource(args);
+        if (properties.containsProperty("help")) {
+            UserMessages.printHelp();
+        } else {
+            if (properties.containsProperty("query")) {
+                cSqlV.handleQuery(properties.getProperty("query"));
+            } else {
+                UserMessages.printNothingProvided();
+            }
         }
     }
 }
