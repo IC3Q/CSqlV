@@ -9,8 +9,7 @@ public class UserMessages {
                 "\t* filepath should be in escaped quotes\n" +
                 "\t* mysql-like syntax\n" +
                 "\t* if COUNT(something) is provided result will have only number of rows which satisfied provided condition\n" +
-                "\t* Example of query: \"SELECT a, b FROM \\\"./filename\\\" WHERE a LIKE %s% ORDER BY b DESC LIMIT 5\n" +
-                "\t* ");
+                "\t* Example of query: \"SELECT a, b FROM \\\"./filename\\\" WHERE a LIKE %s% ORDER BY b DESC LIMIT 5");
         System.out.println(sb.toString());
     }
 
